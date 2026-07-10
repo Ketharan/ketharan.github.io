@@ -1,6 +1,8 @@
 ---
 layout: post
+part: 2
 title: "Part 2 — Standing up OpenChoreo on EKS (an internal developer platform)"
+description: "Install OpenChoreo on EKS — and the four EKS-specific gotchas the k3d guide won't warn you about."
 date: 2026-07-10
 permalink: /part-2/
 tags: [kubernetes, aws, ai-agents, security, devops]

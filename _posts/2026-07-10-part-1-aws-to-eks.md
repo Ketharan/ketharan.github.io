@@ -1,6 +1,8 @@
 ---
 layout: post
+part: 1
 title: "Part 1 — From zero to an AI-ready Kubernetes cluster: AWS account → EKS Auto Mode"
+description: "Start from an empty AWS account and end with an EKS Auto Mode cluster that scales to zero."
 date: 2026-07-10
 permalink: /part-1/
 tags: [kubernetes, aws, ai-agents, security, devops]

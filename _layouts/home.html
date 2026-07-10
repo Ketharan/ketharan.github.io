@@ -1,0 +1,35 @@
+---
+layout: default
+---
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">A 4-part, reproducible series</p>
+    <h1 class="hero-title">Give every AI&nbsp;agent<br>its own <span class="grad">VM</span>.</h1>
+    <p class="hero-lede">From an empty AWS account to an AI agent running in its own hardware-isolated microVM — on bare metal that costs <strong>$0 when idle</strong>. Engaging to read, exact to execute.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="{{ '/part-1/' | relative_url }}">Start with Part&nbsp;1 →</a>
+      <a class="btn btn-ghost" href="https://github.com/Ketharan/agent-sandbox-eks">Companion repo</a>
+    </div>
+    <div class="hero-stack">
+      <span>AWS EKS Auto Mode</span><span>OpenChoreo</span><span>Kata Containers</span><span>agent-sandbox</span>
+    </div>
+  </div>
+</section>
+
+<section class="wrap intro">{{ content }}</section>
+
+<section class="wrap">
+  <div class="cards">
+    {% assign parts = site.posts | sort: 'part' %}
+    {% for post in parts %}
+    <a class="card" href="{{ post.url | relative_url }}">
+      <span class="card-num">{{ post.part }}</span>
+      <div class="card-body">
+        <h3>{{ post.title | split: '— ' | last }}</h3>
+        <p>{{ post.description }}</p>
+        <span class="card-meta">{{ post.content | number_of_words | divided_by: 220 | plus: 1 }} min read →</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>

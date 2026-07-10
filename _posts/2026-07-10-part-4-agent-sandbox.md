@@ -1,6 +1,8 @@
 ---
 layout: post
+part: 4
 title: "Part 4 — Give every AI agent its own VM: agent-sandbox on OpenChoreo (with a live security demo)"
+description: "Deploy an AI agent into a Kata microVM and watch it write its own failed pentest report."
 date: 2026-07-10
 permalink: /part-4/
 tags: [kubernetes, aws, ai-agents, security, devops]
