@@ -1,0 +1,15 @@
+title: "Ketharan — Engineering notes"
+description: "Running VM-isolated AI agents on EKS with OpenChoreo + Kata Containers, and other cloud-native notes."
+theme: minima
+author:
+  name: Ketharan
+show_excerpts: true
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+header_pages:
+  - index.md
+
+# clean, series-friendly defaults
+permalink: /:slug/
