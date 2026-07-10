@@ -22,7 +22,7 @@ Raw `kubectl` doesn't scale to a team shipping services *and* agents. OpenChoreo
 ## Versions used (pin these for reproducibility)
 | Component | Version |
 |-----------|---------|
-| OpenChoreo charts | `1.1.1` |
+| OpenChoreo charts | `0.0.0-c6ce5916` |
 | Gateway API CRDs | `v1.4.1` (experimental) |
 | cert-manager | `v1.19.4` |
 | External Secrets | `2.0.1` |
@@ -135,7 +135,7 @@ Install with placeholder domains and TLS off — we'll rewrite these once we kno
 
 ```bash
 helm upgrade --install openchoreo-control-plane oci://ghcr.io/openchoreo/helm-charts/openchoreo-control-plane \
-  --version 1.1.1 --namespace openchoreo-control-plane --create-namespace \
+  --version 0.0.0-c6ce5916 --namespace openchoreo-control-plane --create-namespace \
   --values - <<'EOF'
 openchoreoApi: { http: { hostnames: ["api.placeholder.tld"] } }
 backstage:
@@ -160,7 +160,7 @@ kubectl rollout status deploy/controller-manager -n openchoreo-control-plane --t
 
 ```bash
 helm upgrade openchoreo-control-plane oci://ghcr.io/openchoreo/helm-charts/openchoreo-control-plane \
-  --version 1.1.1 --namespace openchoreo-control-plane --reuse-values \
+  --version 0.0.0-c6ce5916 --namespace openchoreo-control-plane --reuse-values \
   --values - <<'EOF'
 gateway:
   infrastructure:
@@ -240,7 +240,7 @@ kubectl get externalsecret backstage-secrets -n openchoreo-control-plane   # REA
 
 ```bash
 helm upgrade openchoreo-control-plane oci://ghcr.io/openchoreo/helm-charts/openchoreo-control-plane \
-  --version 1.1.1 --namespace openchoreo-control-plane --reuse-values \
+  --version 0.0.0-c6ce5916 --namespace openchoreo-control-plane --reuse-values \
   --values - <<EOF
 openchoreoApi:
   config:
@@ -296,7 +296,7 @@ kubectl get secret cluster-gateway-ca -n openchoreo-control-plane -o jsonpath='{
 
 # install (internet-facing, TLS off first)
 helm upgrade --install openchoreo-data-plane oci://ghcr.io/openchoreo/helm-charts/openchoreo-data-plane \
-  --version 1.1.1 --namespace openchoreo-data-plane --create-namespace \
+  --version 0.0.0-c6ce5916 --namespace openchoreo-data-plane --create-namespace \
   --set gateway.tls.enabled=false \
   --set 'gateway.infrastructure.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-type=external' \
   --set 'gateway.infrastructure.annotations.service\.beta\.kubernetes\.io/aws-load-balancer-nlb-target-type=ip' \
@@ -324,7 +324,7 @@ spec:
 EOF
 kubectl wait --for=condition=Ready certificate/dp-gateway-tls -n openchoreo-data-plane --timeout=90s
 helm upgrade openchoreo-data-plane oci://ghcr.io/openchoreo/helm-charts/openchoreo-data-plane \
-  --version 1.1.1 --namespace openchoreo-data-plane --reuse-values \
+  --version 0.0.0-c6ce5916 --namespace openchoreo-data-plane --reuse-values \
   --values - <<EOF
 gateway: { tls: { enabled: true, hostname: "*.${DP_DOMAIN}", certificateRefs: [ { name: dp-gateway-tls } ] } }
 EOF
