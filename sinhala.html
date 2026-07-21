@@ -1,0 +1,387 @@
+---
+layout: default
+permalink: /sinhala/
+title: "Sinhala Practice"
+description: "A flashcard trainer for the Sinhala phrases I'm learning — English first, recall the romanization, then reveal to compare."
+---
+{% raw %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap">
+
+<style>
+  .sin{--pad:22px}
+  .sin-hero{max-width:820px;margin:0 auto;padding:44px 22px 8px}
+  .sin-hero .eyebrow{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12.5px;color:var(--accent);margin:0 0 12px}
+  .sin-hero h1{font-family:var(--sans);font-weight:900;font-size:clamp(30px,5vw,44px);letter-spacing:-.03em;line-height:1.05;color:var(--ink);margin:0 0 14px}
+  .sin-hero .lead{font-size:18px;color:var(--body);max-width:640px;margin:0}
+  .sin-hero .lead b{color:var(--ink)}
+
+  .sin-toolbar{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);margin-top:22px}
+  .sin-toolbar .tb-inner{max-width:820px;margin:0 auto;padding:12px 22px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+  .tb-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+  .chip{font:inherit;font-size:13.5px;font-weight:600;color:var(--body);background:#fff;border:1px solid var(--line);
+    border-radius:999px;padding:5px 12px;cursor:pointer;transition:.14s}
+  .chip:hover{border-color:var(--accent)}
+  .chip.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tb-sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+  .tb-btn{font:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:var(--accentbg);border:1px solid transparent;
+    border-radius:8px;padding:6px 12px;cursor:pointer;transition:.14s}
+  .tb-btn:hover{filter:brightness(.96)}
+  .tb-stats{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--muted)}
+  .tb-stats b{color:var(--accent)}
+
+  .sin-main{max-width:820px;margin:0 auto;padding:22px}
+  .deck{margin:26px 0 8px}
+  .deck-head{display:flex;align-items:baseline;gap:10px;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .deck-head h2{margin:0;font-weight:800;letter-spacing:-.02em;font-size:20px;color:var(--ink)}
+  .deck-head .dh-count{font-family:var(--mono);font-size:12.5px;color:var(--faint,#8a90a0)}
+
+  .qcards{display:grid;gap:12px}
+  .qcard{background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:16px 18px}
+  .qcard.learned{border-left-color:#059669;background:#fbfefc}
+  .qcard-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .daytag{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--accent);
+    background:var(--accentbg);border-radius:5px;padding:2px 7px}
+  .mark-btn{margin-left:auto;font-size:16px;line-height:1;color:var(--line);background:none;border:1px solid var(--line);
+    border-radius:8px;width:32px;height:28px;cursor:pointer;transition:.14s}
+  .mark-btn:hover{border-color:#059669;color:#a7f3d0}
+  .qcard.learned .mark-btn{color:#059669;border-color:#059669}
+
+  .en{font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.01em;line-height:1.3}
+  .try{width:100%;margin-top:11px;font:inherit;font-size:15px;color:var(--ink);background:var(--bg-soft);
+    border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-family:var(--mono)}
+  .try:focus{outline:none;border-color:var(--accent);background:#fff}
+
+  .ans{margin-top:11px;position:relative;cursor:pointer}
+  .ans-inner{filter:blur(8px);transition:filter .18s;user-select:none}
+  .qcard.revealed .ans-inner{filter:none;user-select:text}
+  .ans .tap-hint{position:absolute;inset:0;display:grid;place-items:center;font-size:12.5px;font-weight:700;
+    color:var(--muted);letter-spacing:.02em;pointer-events:none}
+  .qcard.revealed .ans .tap-hint{display:none}
+  .rom{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--accent-strong,#0b5d64);line-height:1.35}
+  .qcard .rom{color:var(--accent)}
+  .si{font-family:'Noto Sans Sinhala',var(--sans);font-size:20px;color:var(--body);margin-top:3px;line-height:1.5}
+  .verdict{font-size:13.5px;font-weight:700;margin-top:8px;min-height:1px}
+  .verdict.ok{color:#059669}
+  .verdict.no{color:#b45309}
+  .verdict .you{font-family:var(--mono);font-weight:500}
+
+  .card-actions{margin-top:12px}
+  .reveal-btn{font:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--ink);border:none;
+    border-radius:9px;padding:8px 16px;cursor:pointer;transition:.14s}
+  .reveal-btn:hover{background:var(--accent)}
+  .qcard.revealed .reveal-btn{background:#fff;color:var(--body);border:1px solid var(--line)}
+
+  .sin-empty{text-align:center;color:var(--muted);padding:48px 0;font-size:16px}
+  .sin-foot{max-width:820px;margin:8px auto 0;padding:0 22px 20px;color:var(--muted);font-size:13.5px}
+
+  @media(max-width:640px){
+    .en{font-size:18px}.rom{font-size:20px}
+    .tb-stats{margin-left:0;width:100%;order:5}
+  }
+</style>
+
+<div class="sin cat-personal">
+  <header class="sin-hero">
+    <p class="eyebrow">Personal · Language practice</p>
+    <h1>Sinhala practice</h1>
+    <p class="lead">Phrases I'm learning as a Sri Lankan software engineer. The <b>English shows first</b> — try to construct the romanized Sinhala in your head (or type it), then hit <b>Reveal</b> to compare. Mark the ones you know with ★. Progress is saved in your browser.</p>
+  </header>
+
+  <div class="sin-toolbar">
+    <div class="tb-inner">
+      <span class="tb-label">Day</span>
+      <div id="dayChips" class="chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      <span class="tb-sep"></span>
+      <button class="chip" id="fltStatus" data-status="all">Showing: all</button>
+      <span class="tb-sep"></span>
+      <button class="tb-btn" id="btnShuffle">Shuffle: off</button>
+      <button class="tb-btn" id="btnRevealAll">Reveal all</button>
+      <button class="tb-btn" id="btnHideAll">Hide all</button>
+      <span class="tb-stats">Learned <b id="statLearned">0</b> / <span id="statTotal">0</span></span>
+    </div>
+  </div>
+
+  <main class="sin-main" id="deckHost"></main>
+  <p class="sin-foot">Source: my “Sinhala for Sri Lankan Software Engineers — Days 1–10” notes. Column order: English → Romanized → Sinhala script.</p>
+</div>
+
+<script>
+(function(){
+  var DECKS = [
+    {day:1,title:"Greetings & Survival",cards:[
+      ["Hello","Ayubowan","ආයුබෝවන්"],
+      ["How are you?","Kohomada?","කොහොමද?"],
+      ["I'm fine.","Mama hondin.","මම හොඳින්."],
+      ["Thank you.","Stuthi.","ස්තුතියි."],
+      ["Okay.","Hari.","හරි."],
+      ["I know a little Sinhala.","Mata Sinhala tikak puluwan.","මට සිංහල ටිකක් පුළුවන්."],
+      ["I'm learning Sinhala.","Mama Sinhala igena gannawa.","මම සිංහල ඉගෙන ගන්නවා."],
+      ["Please speak slowly.","Hemin kiyanna.","හෙමින් කියන්න."],
+      ["Please say it again.","Ayeth kiyanna.","ආයෙත් කියන්න."],
+      ["I understood.","Mata theruna.","මට තේරුණා."]
+    ]},
+    {day:2,title:"Around the Office",cards:[
+      ["There's a lot of work today.","Ada wada godak thiyenawa.","අද වැඩ ගොඩක් තියෙනවා."],
+      ["There isn't much work today.","Ada wada tikai.","අද වැඩ ටිකයි."],
+      ["I'm doing this.","Mama meka karanawa.","මම මේක කරනවා."],
+      ["I finished this.","Mama meka iwara kala.","මම මේක ඉවර කළා."],
+      ["Check this.","Meka balanna.","මේක බලන්න."],
+      ["Is this correct?","Meka harida?","මේක හරිද?"],
+      ["Can you help me?","Mata udaw karanna puluwanda?","මට උදව් කරන්න පුළුවන්ද?"],
+      ["Thanks, that's a big help.","Stuthi, loku udawwak.","ස්තුතියි, ලොකු උදව්වක්."],
+      ["I'll come now.","Mama dan ennam.","මම දැන් එන්නම්."],
+      ["Let's talk later.","Passe katha karamu.","පස්සේ කතා කරමු."]
+    ]},
+    {day:3,title:"Meetings",cards:[
+      ["What time is the meeting?","Meeting eka keeyatada?","Meeting එක කීයටද?"],
+      ["Let's start.","Api patan gamu.","අපි පටන් ගමු."],
+      ["I have a question.","Mata prashnayak thiyenawa.","මට ප්‍රශ්නයක් තියෙනවා."],
+      ["That's a good idea.","Eka honda adahasak.","ඒක හොඳ අදහසක්."],
+      ["I agree.","Mama ekangai.","මම එකඟයි."],
+      ["I don't agree.","Mama ekanga naehe.","මම එකඟ නැහැ."],
+      ["Please explain a little.","Tikak pehedili karanna.","ටිකක් පැහැදිලි කරන්න."],
+      ["I understood that.","Mata eka theruna.","මට ඒක තේරුණා."],
+      ["Please say it one more time.","Thawa eka parak kiyanna.","තව එක පාරක් කියන්න."],
+      ["Let's check / We'll see.","Api balamu.","අපි බලමු."]
+    ]},
+    {day:4,title:"Daily Standup",cards:[
+      ["Yesterday I worked on this.","Iye mama meke wada kala.","ඊයේ මම මේකේ වැඩ කළා."],
+      ["Today I'm working on this.","Ada mama meka karanawa.","අද මම මේක කරනවා."],
+      ["I have a blocker.","Blocker ekak thiyenawa.","Blocker එකක් තියෙනවා."],
+      ["No blockers.","Blocker naehe.","Blocker නැහැ."],
+      ["I'm testing.","Testing karanawa.","Testing කරනවා."],
+      ["I'm looking for the fix.","Fix eka hoyanawa.","Fix එක හොයනවා."],
+      ["Not finished yet.","Thama iwara naehe.","තාම ඉවර නැහැ."],
+      ["It'll finish soon.","Ikmanata iwara wenawa.","ඉක්මනට ඉවර වෙනවා."],
+      ["A review is needed.","Review eka one.","Review එක ඕනේ."],
+      ["Deploying today.","Ada deploy karanawa.","අද deploy කරනවා."]
+    ]},
+    {day:5,title:"Code Reviews",cards:[
+      ["Did you review the PR?","PR eka review kalada?","PR එක review කළාද?"],
+      ["I left a comment.","Comment ekak damma.","Comment එකක් දැම්මා."],
+      ["I fixed it.","Mama fix kala.","මම fix කළා."],
+      ["There's one more thing.","Thawa ekak thiyenawa.","තව එකක් තියෙනවා."],
+      ["Merge it.","Eka merge karanna.","ඒක merge කරන්න."],
+      ["The build passed.","Build eka pass una.","Build එක pass වුණා."],
+      ["The build failed.","Build eka fail una.","Build එක fail වුණා."],
+      ["The CI is running.","CI eka run wenawa.","CI එක run වෙනවා."],
+      ["Let's check the logs.","Logs balamu.","Logs බලමු."],
+      ["Good job!","Honda wadak!","හොඳ වැඩක්!"]
+    ]},
+    {day:6,title:"Asking for Help",cards:[
+      ["Can you help me for a moment?","Mata poddak udaw karanna puluwanda?","මට පොඩ්ඩක් උදව් කරන්න පුළුවන්ද?"],
+      ["Can you check this?","Meka balanna puluwanda?","මේක බලන්න පුළුවන්ද?"],
+      ["Can you explain this?","Meka explain karanna puluwanda?","මේක explain කරන්න පුළුවන්ද?"],
+      ["I don't understand.","Mata therenne naehe.","මට තේරෙන්නේ නැහැ."],
+      ["Speak a little slower.","Tikak hemin kiyanna.","ටිකක් හෙමින් කියන්න."],
+      ["I'll try.","Mama try karannam.","මම try කරන්නම්."],
+      ["Let's look at it together.","Api ekata balamu.","අපි එකට බලමු."],
+      ["That's fine.","Eka hari.","ඒක හරි."],
+      ["No problem.","Prashnayak naehe.","ප්‍රශ්නයක් නැහැ."],
+      ["Thank you very much.","Godak stuthi.","ගොඩක් ස්තුතියි."]
+    ]},
+    {day:7,title:"Tea Break Conversations",cards:[
+      ["Are you having tea?","The bonawada?","තේ බොනවද?"],
+      ["Are you having coffee?","Kopi bonawada?","කෝපි බොනවද?"],
+      ["Let's go.","Api yamu.","අපි යමු."],
+      ["I'll come.","Mama ennam.","මම එන්නම්."],
+      ["How's work today?","Ada wada kohomada?","අද වැඩ කොහොමද?"],
+      ["A little busy.","Tikak busy.","ටිකක් busy."],
+      ["Is tomorrow a holiday?","Heta niwaduda?","හෙට නිවාඩුද?"],
+      ["No.","Naehe.","නැහැ."],
+      ["Okay then.","Hari ehenam.","හරි එහෙනම්."],
+      ["See you later.","Passe hambemu.","පස්සේ හම්බෙමු."]
+    ]},
+    {day:8,title:"Time",cards:[
+      ["Now","Dan","දැන්"],
+      ["Later","Passe","පස්සේ"],
+      ["Today","Ada","අද"],
+      ["Tomorrow","Heta","හෙට"],
+      ["Yesterday","Iye","ඊයේ"],
+      ["In a little while.","Tikak wela.","ටිකක් වෙලා."],
+      ["Quickly.","Ikmanata.","ඉක්මනට."],
+      ["I'll come right now.","Danma ennam.","දැන්ම එන්නම්."],
+      ["Five more minutes.","Thawa winadi pahai.","තව විනාඩි පහයි."],
+      ["Let's begin.","Api patan gamu.","අපි පටන් ගමු."]
+    ]},
+    {day:9,title:"Debugging",cards:[
+      ["There's an issue.","Issue ekak thiyenawa.","Issue එකක් තියෙනවා."],
+      ["I fixed the issue.","Issue eka fix kala.","Issue එක fix කළා."],
+      ["The issue still exists.","Thama issue eka thiyenawa.","තාම issue එක තියෙනවා."],
+      ["Let's check the logs.","Logs balamu.","Logs බලමු."],
+      ["What's the error?","Error eka mokakda?","Error එක මොකක්ද?"],
+      ["Let's retry.","Retry karamu.","Retry කරමු."],
+      ["Restart it.","Restart karanna.","Restart කරන්න."],
+      ["It's okay now.","Dan hari.","දැන් හරි."],
+      ["Let's test it.","Test karala balamu.","Test කරලා බලමු."],
+      ["It's working.","Wada karanawa.","වැඩ කරනවා."]
+    ]},
+    {day:10,title:"Kubernetes & Deployments",cards:[
+      ["Did you deploy it?","Deploy kalada?","Deploy කරලාද?"],
+      ["I'm deploying.","Deploy karanawa.","Deploy කරනවා."],
+      ["The deployment failed.","Deployment eka fail una.","Deployment එක fail වුණා."],
+      ["The pod restarted.","Pod eka restart una.","Pod එක restart වුණා."],
+      ["The cluster is healthy.","Cluster eka hondai.","Cluster එක හොඳයි."],
+      ["The service is down.","Service eka down.","Service එක down."],
+      ["I updated the configuration.","Config eka update kala.","Config එක update කළා."],
+      ["Let's check the logs.","Logs tika balamu.","Logs ටික බලමු."],
+      ["We need to roll back.","Rollback karanna one.","Rollback කරන්න ඕනේ."],
+      ["It's working now.","Dan wada karanawa.","දැන් වැඩ කරනවා."]
+    ]}
+  ];
+
+  // flatten into cards with stable ids
+  var ALL = [];
+  DECKS.forEach(function(d){
+    d.cards.forEach(function(c,i){
+      ALL.push({id:"d"+d.day+"c"+(i+1),day:d.day,dayTitle:d.title,en:c[0],rom:c[1],si:c[2]});
+    });
+  });
+
+  var LS_KEY = "sinhala_learned_v1";
+  var learned = load();
+  function load(){ try{ return new Set(JSON.parse(localStorage.getItem(LS_KEY)||"[]")); }catch(e){ return new Set(); } }
+  function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify([].slice.call(learned))); }catch(e){} }
+
+  var state = { day:"all", status:"all", shuffle:false };
+
+  function norm(s){ return (s||"").toLowerCase().replace(/[.,!?;:'"()\/’\-]/g,"").replace(/\s+/g,""); }
+  function seededOrder(arr){ // Fisher–Yates
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+
+  var host = document.getElementById("deckHost");
+  var statLearned = document.getElementById("statLearned");
+  var statTotal = document.getElementById("statTotal");
+  statTotal.textContent = ALL.length;
+
+  // build day chips
+  var chipHost = document.getElementById("dayChips");
+  var days = ["all"].concat(DECKS.map(function(d){return d.day;}));
+  days.forEach(function(d){
+    var b = document.createElement("button");
+    b.className = "chip" + (d==="all"?" active":"");
+    b.textContent = d==="all" ? "All" : d;
+    b.dataset.day = d;
+    b.addEventListener("click", function(){
+      state.day = d;
+      [].forEach.call(chipHost.children, function(x){ x.classList.toggle("active", x===b); });
+      render();
+    });
+    chipHost.appendChild(b);
+  });
+
+  var fltStatus = document.getElementById("fltStatus");
+  fltStatus.addEventListener("click", function(){
+    state.status = state.status==="all" ? "review" : state.status==="review" ? "learned" : "all";
+    fltStatus.textContent = "Showing: " + (state.status==="all"?"all":state.status==="review"?"to review":"learned");
+    fltStatus.classList.toggle("active", state.status!=="all");
+    render();
+  });
+
+  var btnShuffle = document.getElementById("btnShuffle");
+  btnShuffle.addEventListener("click", function(){
+    state.shuffle = !state.shuffle;
+    btnShuffle.textContent = "Shuffle: " + (state.shuffle?"on":"off");
+    btnShuffle.classList.toggle("active", state.shuffle);
+    render();
+  });
+  document.getElementById("btnRevealAll").addEventListener("click", function(){
+    [].forEach.call(host.querySelectorAll(".qcard"), function(c){ c.classList.add("revealed"); });
+  });
+  document.getElementById("btnHideAll").addEventListener("click", function(){
+    [].forEach.call(host.querySelectorAll(".qcard"), function(c){ c.classList.remove("revealed"); });
+  });
+
+  function visibleCards(){
+    return ALL.filter(function(c){
+      if(state.day!=="all" && c.day!==state.day) return false;
+      if(state.status==="review" && learned.has(c.id)) return false;
+      if(state.status==="learned" && !learned.has(c.id)) return false;
+      return true;
+    });
+  }
+
+  function cardEl(c){
+    var el = document.createElement("div");
+    el.className = "qcard" + (learned.has(c.id)?" learned":"");
+    el.dataset.id = c.id;
+    var mark = learned.has(c.id) ? "★" : "☆";
+    el.innerHTML =
+      '<div class="qcard-top">'+
+        '<span class="daytag">Day '+c.day+'</span>'+
+        '<button class="mark-btn" title="Mark as learned" aria-label="Mark as learned">'+mark+'</button>'+
+      '</div>'+
+      '<div class="en"></div>'+
+      '<input class="try" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type romanized… (Enter to reveal)">'+
+      '<div class="ans">'+
+        '<div class="ans-inner"><div class="rom"></div><div class="si"></div><div class="verdict"></div></div>'+
+        '<span class="tap-hint">Tap to reveal</span>'+
+      '</div>'+
+      '<div class="card-actions"><button class="reveal-btn">Reveal</button></div>';
+    el.querySelector(".en").textContent = c.en;
+    el.querySelector(".rom").textContent = c.rom;
+    el.querySelector(".si").textContent = c.si;
+
+    function reveal(){
+      el.classList.add("revealed");
+      var typed = el.querySelector(".try").value;
+      var v = el.querySelector(".verdict");
+      if(typed.trim()===""){ v.textContent=""; v.className="verdict"; return; }
+      if(norm(typed)===norm(c.rom)){ v.textContent = "✓ Correct"; v.className = "verdict ok"; }
+      else { v.innerHTML = '✗ Compare — you wrote <span class="you">'+typed.replace(/</g,"&lt;")+'</span>'; v.className = "verdict no"; }
+    }
+    function toggle(){ el.classList.contains("revealed") ? el.classList.remove("revealed") : reveal(); }
+
+    el.querySelector(".reveal-btn").addEventListener("click", toggle);
+    el.querySelector(".ans").addEventListener("click", function(){ if(!el.classList.contains("revealed")) reveal(); });
+    el.querySelector(".try").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); reveal(); } });
+    el.querySelector(".mark-btn").addEventListener("click", function(){
+      if(learned.has(c.id)){ learned.delete(c.id); } else { learned.add(c.id); }
+      save();
+      el.classList.toggle("learned", learned.has(c.id));
+      el.querySelector(".mark-btn").textContent = learned.has(c.id) ? "★" : "☆";
+      updateStats();
+    });
+    return el;
+  }
+
+  function updateStats(){ statLearned.textContent = learned.size; }
+
+  function render(){
+    host.innerHTML = "";
+    var cards = visibleCards();
+    if(cards.length===0){
+      host.innerHTML = '<p class="sin-empty">Nothing here — try a different Day or status filter.</p>';
+      updateStats(); return;
+    }
+    if(state.shuffle){
+      var wrap = document.createElement("div");
+      var head = document.createElement("div");
+      head.className = "deck";
+      head.innerHTML = '<div class="deck-head"><h2>Shuffled</h2><span class="dh-count">'+cards.length+' cards</span></div>';
+      var grid = document.createElement("div"); grid.className = "qcards";
+      seededOrder(cards).forEach(function(c){ grid.appendChild(cardEl(c)); });
+      head.appendChild(grid); host.appendChild(head);
+    } else {
+      DECKS.forEach(function(d){
+        var deckCards = cards.filter(function(c){ return c.day===d.day; });
+        if(deckCards.length===0) return;
+        var sec = document.createElement("div");
+        sec.className = "deck";
+        sec.innerHTML = '<div class="deck-head"><h2>Day '+d.day+' · '+d.title+'</h2><span class="dh-count">'+deckCards.length+' cards</span></div>';
+        var grid = document.createElement("div"); grid.className = "qcards";
+        deckCards.forEach(function(c){ grid.appendChild(cardEl(c)); });
+        sec.appendChild(grid); host.appendChild(sec);
+      });
+    }
+    updateStats();
+  }
+
+  render();
+})();
+</script>
+{% endraw %}
