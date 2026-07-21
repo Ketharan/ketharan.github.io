@@ -1,0 +1,9 @@
+{%- assign cat = include.post.categories | first | default: include.post.category -%}
+<a class="pcard cat-{{ cat }}" href="{{ include.post.url | relative_url }}">
+  <div class="pcard-top">
+    <span class="cat-tag">{{ cat }}</span>
+    <span class="pcard-date">{{ include.post.date | date: "%b %-d, %Y" }}</span>
+  </div>
+  <h3>{% if include.post.series %}<span class="series-badge">Part {{ include.post.part }}</span> {% endif %}{{ include.post.title | split: '— ' | last }}</h3>
+  <p>{{ include.post.description | default: include.post.excerpt | strip_html | truncate: 130 }}</p>
+</a>

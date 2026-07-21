@@ -1,5 +1,8 @@
 ---
 layout: post
+category: technical
+series: "Give every AI agent its own VM"
+repo: https://github.com/Ketharan/agent-sandbox-eks
 part: 4
 title: "Part 4 — Give every AI agent its own VM: agent-sandbox on OpenChoreo (with a live security demo)"
 description: "Deploy an AI agent into a Kata microVM and watch it write its own failed pentest report."

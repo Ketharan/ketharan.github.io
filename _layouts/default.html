@@ -15,17 +15,22 @@
 <body>
 <div class="progress" id="progress"></div>
 <header class="site-header">
-  <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">◆</span> Ketharan</a>
+  <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">◆</span> {{ site.title }}</a>
   <nav class="site-nav">
-    <a href="{{ '/' | relative_url }}">The series</a>
-    <a href="https://github.com/Ketharan/agent-sandbox-eks" class="nav-ext">Companion repo ↗</a>
+    {% for s in site.sections %}
+    <a href="{{ '/' | append: s.slug | append: '/' | relative_url }}"{% if page.category == s.slug %} class="here"{% endif %}>{{ s.label }}</a>
+    {% endfor %}
   </nav>
 </header>
 <main>{{ content }}</main>
 <footer class="site-footer">
   <div class="footer-inner">
-    <p><strong>Give every AI agent its own VM</strong> — a hands-on series, written to be followed by a human or an agent.</p>
-    <p class="muted">Companion code: <a href="https://github.com/Ketharan/agent-sandbox-eks">github.com/Ketharan/agent-sandbox-eks</a> · Built with Jekyll on GitHub Pages.</p>
+    <p><strong>{{ site.title }}</strong> — {{ site.description }}</p>
+    <p class="muted">
+      {% for s in site.sections %}<a href="{{ '/' | append: s.slug | append: '/' | relative_url }}">{{ s.label }}</a>{% unless forloop.last %} · {% endunless %}{% endfor %}
+      · <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+      · Built with Jekyll on GitHub Pages.
+    </p>
   </div>
 </footer>
 <script src="{{ '/assets/js/main.js' | relative_url }}"></script>

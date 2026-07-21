@@ -1,5 +1,5 @@
-title: "Ketharan — Engineering notes"
-description: "Running VM-isolated AI agents on EKS with OpenChoreo + Kata Containers, and other cloud-native notes."
+title: "Ketharan"
+description: "Notes on technology, travel, and everyday life."
 author:
   name: Ketharan
 url: "https://ketharan.github.io"
@@ -9,4 +9,20 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
 
-permalink: /:slug/
+# category-prefixed URLs, e.g. /travel/kyoto-in-autumn/
+# (series posts override this with their own permalink)
+permalink: /:categories/:slug/
+
+# the three flavours this blog is organized around.
+# label + blurb are consumed by _layouts; accent color is CSS (.cat-<slug>).
+# NB: keyed as `sections` because `site.categories` is Jekyll-reserved.
+sections:
+  - slug: technical
+    label: Technical
+    blurb: "Cloud-native engineering, security, and things I build."
+  - slug: travel
+    label: Travel
+    blurb: "Places I've been and what they were like on the ground."
+  - slug: personal
+    label: Personal
+    blurb: "Life, reflections, and everything off the clock."

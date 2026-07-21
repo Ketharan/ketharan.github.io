@@ -1,10 +1,12 @@
 ---
 layout: default
 ---
-<article class="post wrap">
+{% assign cat = page.categories | first | default: page.category %}
+<article class="post wrap cat-{{ cat }}">
   <header class="post-header">
     <div class="post-meta">
-      <span class="pill">Part {{ page.part }} of 4</span>
+      {% if cat %}<a class="pill cat-tag" href="{{ '/' | append: cat | append: '/' | relative_url }}">{{ cat }}</a>{% endif %}
+      {% if page.series %}<span class="pill series-pill">{{ page.series }} · Part {{ page.part }}</span>{% endif %}
       <span>{{ page.date | date: "%B %-d, %Y" }}</span>
       <span>·</span>
       <span>{{ content | number_of_words | divided_by: 220 | plus: 1 }} min read</span>
@@ -15,17 +17,21 @@ layout: default
 
   <div class="prose">{{ content }}</div>
 
+  {%- comment -%} prev/next within a series, resolved from sibling posts (no hardcoded count or URLs) {%- endcomment -%}
+  {% if page.series %}
+  {% assign sibs = site.posts | where_exp: "p", "p.series == page.series" | sort: "part" %}
+  {% assign prevpart = page.part | minus: 1 %}
+  {% assign nextpart = page.part | plus: 1 %}
+  {% assign prev = sibs | where: "part", prevpart | first %}
+  {% assign next = sibs | where: "part", nextpart | first %}
   <nav class="post-nav">
-    {% if page.part > 1 %}
-    <a class="pn pn-prev" href="/part-{{ page.part | minus: 1 }}/"><span>← Previous</span><strong>Part {{ page.part | minus: 1 }}</strong></a>
-    {% else %}<span></span>{% endif %}
-    {% if page.part < 4 %}
-    <a class="pn pn-next" href="/part-{{ page.part | plus: 1 }}/"><span>Next →</span><strong>Part {{ page.part | plus: 1 }}</strong></a>
-    {% endif %}
+    {% if prev %}<a class="pn pn-prev" href="{{ prev.url | relative_url }}"><span>← Part {{ prev.part }}</span><strong>{{ prev.title | split: '— ' | last }}</strong></a>{% else %}<span></span>{% endif %}
+    {% if next %}<a class="pn pn-next" href="{{ next.url | relative_url }}"><span>Part {{ next.part }} →</span><strong>{{ next.title | split: '— ' | last }}</strong></a>{% endif %}
   </nav>
+  {% endif %}
 
   <div class="post-foot">
-    <a href="{{ '/' | relative_url }}">← Back to the series</a>
-    <a href="https://github.com/Ketharan/agent-sandbox-eks">Companion repo ↗</a>
+    <a href="{{ '/' | append: cat | append: '/' | relative_url }}">← More {{ cat }}</a>
+    {% if page.repo %}<a href="{{ page.repo }}">Companion repo ↗</a>{% endif %}
   </div>
 </article>

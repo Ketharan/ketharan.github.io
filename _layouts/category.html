@@ -1,0 +1,38 @@
+---
+layout: default
+---
+{% assign catposts = site.posts | where_exp: "p", "p.categories contains page.category" %}
+<section class="cat-hero wrap cat-{{ page.category }}">
+  <p class="eyebrow">{{ catposts.size }} post{% if catposts.size != 1 %}s{% endif %}</p>
+  <h1 class="cat-title">{{ page.title }}</h1>
+  <p class="hero-lede">{{ page.blurb | default: page.description }}</p>
+  {{ content }}
+</section>
+
+<section class="wrap cat-{{ page.category }}">
+  {%- comment -%} Series first (grouped), then standalone posts newest-first. Assumes one series per category. {%- endcomment -%}
+  {% assign series_posts = catposts | where_exp: "p", "p.series" | sort: "part" %}
+  {% if series_posts.size > 0 %}
+  <div class="series-block">
+    <div class="series-head">
+      <span class="series-kicker">Series · {{ series_posts.size }} parts</span>
+      <h2>{{ series_posts.first.series }}</h2>
+    </div>
+    <ol class="series-list">
+      {% for post in series_posts %}
+      <a class="series-item" href="{{ post.url | relative_url }}">
+        <span class="series-num">{{ post.part }}</span>
+        <span class="series-body">
+          <strong>{{ post.title | split: '— ' | last }}</strong>
+          <span class="muted">{{ post.description }}</span>
+        </span>
+      </a>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  <div class="pcards">
+    {% for post in catposts %}{% unless post.series %}{% include post-card.html post=post %}{% endunless %}{% endfor %}
+  </div>
+</section>

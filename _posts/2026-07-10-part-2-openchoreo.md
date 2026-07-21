@@ -1,5 +1,8 @@
 ---
 layout: post
+category: technical
+series: "Give every AI agent its own VM"
+repo: https://github.com/Ketharan/agent-sandbox-eks
 part: 2
 title: "Part 2 — Standing up OpenChoreo on EKS (an internal developer platform)"
 description: "Install OpenChoreo on EKS — and the four EKS-specific gotchas the k3d guide won't warn you about."
