@@ -110,7 +110,9 @@ a.cat-tag:hover{text-decoration:none;filter:brightness(.94)}
 .card-meta{font-weight:700;color:var(--violet2);font-size:14px}
 
 /* post header */
-.post{padding:44px 22px 10px}
+/* wider reading column: text keeps a readable measure, code/tables span the full width */
+.post{max-width:min(1160px,94vw);padding:44px 22px 10px}
+.prose>p,.prose>h2,.prose>h3,.prose>ul,.prose>ol,.prose>blockquote{max-width:58rem}
 .post-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:14px;font-weight:500}
 .pill{background:var(--notebg);color:var(--indigo);font-weight:700;border-radius:999px;padding:3px 12px;font-size:13px}
 .post-title{font-family:var(--sans);font-weight:900;letter-spacing:-.03em;line-height:1.08;font-size:clamp(30px,5vw,44px);color:var(--ink);margin:14px 0 16px}
